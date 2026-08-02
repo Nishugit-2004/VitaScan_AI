@@ -16,7 +16,7 @@ export function useAuth() {
     return { user, loading };
 }
 
-export function useData(endpoint: str) {
+export function useData(endpoint: string) {
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
