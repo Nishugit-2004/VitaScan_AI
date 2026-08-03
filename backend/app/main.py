@@ -19,11 +19,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://vita-scan-ai-amber.vercel.app",
-        "https://vita-scan-ai-git-main-nish1.vercel.app",
-    ],
+    allow_origin_regex="https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
