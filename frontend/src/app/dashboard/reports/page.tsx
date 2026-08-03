@@ -25,8 +25,12 @@ export default function Reports() {
     try {
       const token = localStorage.getItem("access_token");
 
+      const API_URL =
+        process.env.NEXT_PUBLIC_API_URL ||
+        "https://vitascan-api.onrender.com/api/v1";
+
       const res = await axios.get(
-        "http://127.0.0.1:8000/api/v1/medical/reports",
+        `${API_URL}/medical/reports`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
