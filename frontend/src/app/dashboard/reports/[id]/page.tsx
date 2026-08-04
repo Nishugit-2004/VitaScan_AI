@@ -16,6 +16,9 @@ interface Report {
 
 export default function ReportDetailsPage() {
   const { id } = useParams();
+  const API_URL =
+            process.env.NEXT_PUBLIC_API_URL ||
+            "https://vitascan-api.onrender.com/api/v1";
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,10 +26,6 @@ export default function ReportDetailsPage() {
     const fetchReport = async () => {
       try {
         const token = localStorage.getItem("access_token");
-
-        const API_URL =
-          process.env.NEXT_PUBLIC_API_URL ||
-          "https://vitascan-api.onrender.com/api/v1";
 
         const res = await axios.get(
           `${API_URL}/medical/reports/${id}`,
