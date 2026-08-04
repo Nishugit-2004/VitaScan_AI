@@ -26,10 +26,21 @@ class ReportService:
         report_id: str,
         user_id: str,
     ):
-        """
-        Return a single report belonging to the logged-in user.
-        """
-        return (
+        print("\n========== REPORT DEBUG ==========")
+        print("Requested Report ID:", report_id)
+        print("Current User ID:", user_id)
+
+        reports = db.query(Prediction).all()
+
+        print(f"Total Reports in DB: {len(reports)}")
+
+        for r in reports:
+            print("----------------------------")
+            print("DB Report ID :", r.id)
+            print("DB User ID   :", r.user_id)
+            print("Disease      :", r.disease)
+
+        report = (
             db.query(Prediction)
             .filter(
                 Prediction.id == report_id,
@@ -37,3 +48,8 @@ class ReportService:
             )
             .first()
         )
+
+        print("FOUND REPORT:", report)
+        print("=================================\n")
+
+        return report
