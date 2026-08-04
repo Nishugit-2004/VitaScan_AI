@@ -24,8 +24,12 @@ export default function ReportDetailsPage() {
       try {
         const token = localStorage.getItem("access_token");
 
+        const API_URL =
+          process.env.NEXT_PUBLIC_API_URL ||
+          "https://vitascan-api.onrender.com/api/v1";
+
         const res = await axios.get(
-          `http://127.0.0.1:8000/api/v1/medical/reports/${id}`,
+          `${API_URL}/medical/reports/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -59,8 +63,8 @@ export default function ReportDetailsPage() {
     );
 
   const imageUrl = report.image_path
-    ? `http://127.0.0.1:8000/${report.image_path.replace(/\\/g, "/")}`
-    : "";
+  ? `${API_URL.replace("/api/v1", "")}/${report.image_path.replace(/\\/g, "/")}`
+  : "";
 
     const diseaseRecommendations: Record<
         string,
