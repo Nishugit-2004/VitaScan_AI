@@ -57,6 +57,27 @@ class AIModelRouter:
             # 2. Deep Learning Prediction
             prediction = model.predict(tensor_data)
             
+            # 3. Softmax Confidence Gate (Out-of-Distribution Detection)
+            # Threshold set to 60.0% probability. If the highest likelihood class
+            # is beneath this threshold, the model is uncertain, implying the image 
+            # is likely an anomaly, out of domain, or artifacted.
+            confidence = prediction.get("confidence_score", 0.0)
+            
+            # Some predictors might return percentage (60) vs ratio (0.6). Scale accordingly.
+            normalized_conf = confidence if confidence <= 1.0 else (confidence / 100.0)
+
+            if normalized_conf < 0.60:
+                logger.warning(
+                    f"Prediction rejected due to weak confidence ({normalized_conf:.2f}). "
+                    f"Possible OOD or artifact."
+                )
+                return {
+                    "status": "FAILED", 
+                    "result_class": "Inconclusive / Unrecognized Scan", 
+                    "confidence_score": confidence, 
+                    "processing_time_ms": prediction.get("processing_time_ms", 0)
+                }
+
             return prediction
         except PreprocessingError as pe:
             logger.error(f"Pipeline error (Preprocessing): {pe}")

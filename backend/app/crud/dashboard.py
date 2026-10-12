@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from app.models.prediction import Prediction
+from app.core.timezone import as_ist
 
 
 # ===========================
@@ -106,7 +107,7 @@ def get_confidence_trend(
 
     return [
         {
-            "date": prediction.created_at.strftime("%d-%m"),
+            "date": as_ist(prediction.created_at).strftime("%d-%m") if prediction.created_at else "N/A",
             "confidence": prediction.confidence,
         }
         for prediction in results
