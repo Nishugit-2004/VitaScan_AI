@@ -4,6 +4,7 @@ from datetime import datetime
 import uuid
 
 from app.core.database import Base
+from app.core.timezone import utc_now
 
 
 class Prediction(Base):
@@ -25,6 +26,6 @@ class Prediction(Base):
 
     image_path = Column(String)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now)
 
     user = relationship("User",back_populates="predictions")

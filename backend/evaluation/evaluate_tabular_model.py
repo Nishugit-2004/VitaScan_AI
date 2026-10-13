@@ -1,10 +1,9 @@
 from pathlib import Path
 import json
-
 import joblib
-import numpy as np
 import pandas as pd
 
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -36,62 +35,102 @@ def evaluate_tabular_model(model_name="anemia"):
 
     print(f"\nEvaluating {model_name}")
 
+    # -----------------------------------
+    # Load dataset
+    # -----------------------------------
+
     df = pd.read_csv(dataset_path)
 
     X = df.drop(columns=[target_column])
     y = df[target_column]
 
+    # -----------------------------------
+    # Recreate SAME train/test split
+    # used during training
+    # -----------------------------------
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.20,
+        random_state=42,
+        stratify=y
+    )
+
+    # -----------------------------------
+    # Load scaler and trained model
+    # -----------------------------------
+
     scaler = joblib.load(scaler_path)
     model = joblib.load(model_path)
 
-    X_scaled = scaler.transform(X)
+    # -----------------------------------
+    # Transform ONLY test data
+    # -----------------------------------
 
-    predictions = model.predict(X_scaled)
+    X_test_scaled = scaler.transform(X_test)
 
-    accuracy = accuracy_score(y, predictions)
+    # -----------------------------------
+    # Predict ONLY test data
+    # -----------------------------------
+
+    predictions = model.predict(X_test_scaled)
+
+    # -----------------------------------
+    # Calculate metrics
+    # -----------------------------------
+
+    accuracy = accuracy_score(y_test, predictions)
 
     precision = precision_score(
-        y,
+        y_test,
         predictions,
         average="weighted",
         zero_division=0
     )
 
     recall = recall_score(
-        y,
+        y_test,
         predictions,
         average="weighted",
         zero_division=0
     )
 
     f1 = f1_score(
-        y,
+        y_test,
         predictions,
         average="weighted",
         zero_division=0
     )
 
+    # -----------------------------------
+    # Classification report
+    # -----------------------------------
+
     report = classification_report(
-        y,
+        y_test,
         predictions,
         zero_division=0
     )
 
+    # -----------------------------------
+    # Confusion matrix
+    # -----------------------------------
+
     cm = confusion_matrix(
-        y,
+        y_test,
         predictions
     )
 
+    # -----------------------------------
+    # Save metrics
+    # -----------------------------------
+
     metrics = {
-
         "accuracy": float(accuracy),
-
         "precision": float(precision),
-
         "recall": float(recall),
-
         "f1_score": float(f1)
-
     }
 
     save_metrics_json(

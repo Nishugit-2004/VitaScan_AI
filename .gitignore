@@ -97,3 +97,5 @@ clean_tree.txt
 
 # Test scripts
 test_phase*.py
+# Generated evaluation archive
+backend/outputs/outputs.zip
