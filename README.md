@@ -1,4 +1,4 @@
-# VitaScan AI
+# VitaScan AI (ID - 6DQ555)
 
 Intelligent System for Early Detection of Multiple Diseases. This system utilizes deep learning models to predict Dementia (MRI), Breast Cancer (Histopathology), Malaria (Blood Smear), and Anemia (Clinical CSV data).
 
